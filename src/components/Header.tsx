@@ -27,22 +27,22 @@ export const Header: React.FC<HeaderProps> = ({ view, onBack, onDownload, isDown
         </div>
         
         {view === 'editor' && (
-          <div className="flex gap-2">
+          <div className="flex gap-1 sm:gap-2">
             <button 
               onClick={() => onDownload(3)}
               disabled={isDownloading}
-              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 transition disabled:opacity-50"
+              className="flex items-center gap-1 sm:gap-2 bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg font-bold text-xs sm:text-sm hover:bg-blue-700 transition disabled:opacity-50 whitespace-nowrap"
             >
-              <Download className="w-4 h-4" />
-              {isDownloading ? 'ĐANG TẠO...' : 'TẢI HD'}
+              <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+              {isDownloading ? '...' : 'HD'}
             </button>
             <button 
               onClick={() => onDownload(6)}
               disabled={isDownloading}
-              className="hidden md:flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg font-bold text-sm hover:from-purple-700 hover:to-pink-700 transition disabled:opacity-50"
+              className="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 sm:px-4 py-2 rounded-lg font-bold text-xs sm:text-sm hover:from-purple-700 hover:to-pink-700 transition disabled:opacity-50 whitespace-nowrap"
             >
-              <Download className="w-4 h-4" />
-              TẢI 4K
+              <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+              {isDownloading ? '...' : '4K'}
             </button>
           </div>
         )}

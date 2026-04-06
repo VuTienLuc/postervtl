@@ -74,24 +74,48 @@ export default function App() {
         el.removeAttribute('contenteditable');
       });
 
+      // Small delay for DOM stability
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       const canvas = await html2canvas(posterRef.current, {
         scale,
         useCORS: true,
         backgroundColor: '#ffffff',
         logging: false,
+        allowTaint: true,
+        imageTimeout: 15000,
       });
 
-      const link = document.createElement('a');
-      link.download = `poster-${selectedTemplate?.id || 'export'}-${scale >= 6 ? '4K' : 'HD'}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-
-      // Restore
+      // Restore editables
       savedStates.forEach(state => {
         if (state.val) state.el.setAttribute('contenteditable', state.val);
       });
+
+      // Robust download for mobile
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          throw new Error("Failed to create blob");
+        }
+        
+        const url = URL.createObjectURL(blob);
+        const filename = `poster-${selectedTemplate?.id || 'export'}-${scale >= 6 ? '4K' : 'HD'}.png`;
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        
+        document.body.appendChild(link);
+        link.click();
+        
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 200);
+      }, 'image/png', 1.0);
+
     } catch (err) {
       console.error("Download error:", err);
+      alert("Có lỗi xảy ra khi tải ảnh. Vui lòng thử lại hoặc chụp màn hình.");
     } finally {
       setIsDownloading(false);
     }
